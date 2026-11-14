@@ -1,0 +1,28 @@
+Snort is an open-source signature-, protocol-, and anomaly-based Network Intrusion Detection and Prevention System (NIDS/NIPS). It operates through four primary pipeline stages:   
+Data_Network_Security_Experiments_1-10.ipynb
+Packet Decoder: Captures raw network frames from the network interface card (via libpcap) in promiscuous mode and decodes Link (Ethernet), Network (IP), and Transport (TCP/UDP/ICMP) headers.   
+Data_Network_Security_Experiments_1-10.ipynb
+Preprocessors: Defragments IP packets, reassembles stateful TCP streams, and normalizes application-layer protocols (HTTP, FTP, SMB) to defeat evasion techniques.
+Detection Engine: Evaluates each packet/stream against loaded rulesets. Every Snort rule consists of two logical parts:
+Rule Header: Defines the Action (alert, log, pass, drop), Protocol (icmp, tcp, udp, ip), Source IP & Port, Direction Operator (-> or <>), and Destination IP & Port.
+Rule Options (in parentheses): Specifies payload inspection patterns (content, pcre), metadata (msg), unique Signature ID (sid 
+≥
+1000000
+≥1000000 for local custom rules), and revision number (rev).
+
+Data_Network_Security_Experiments_1-10.ipynb
+Logging & Alerting Subsystem: Writes matched packet alerts to the console (-A console) or binary/unified log files.   
+Data_Network_Security_Experiments_1-10.ipynb
+Custom Rule (local.rules)
+Plaintext
+alert icmp any any -> any any (msg:"LAB ICMP Ping Detected"; sid:1000001; rev:1;)
+Linux Terminal Commands
+Bash
+# 1. Validate Snort configuration
+sudo snort -T -c /etc/snort/snort.conf
+
+# 2. Run Snort in live console IDS mode on interface eth0 (or read from a captured pcap file with -r traffic.pcap)
+sudo snort -A console -q -c /etc/snort/snort.conf -i eth0
+
+# 3. Trigger ICMP alert from another terminal
+ping -c 4 <AUTHORIZED-LAB-IP>
